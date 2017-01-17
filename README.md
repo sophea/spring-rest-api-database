@@ -1,6 +1,6 @@
-Spring REST-API with Jdbc template :
+# Spring REST-API with Jdbc template :
 
--CRUD REST-APIs :
+# CRUD REST-APIs :
 
 GET http://localhost:8080/api/categories/v1/all
 GET http://localhost:8080/api/cagetoires/v1/{id}
@@ -9,8 +9,8 @@ DELETE http://localhost:8080/api/cagetoires/v1/{id}
 PUT http://localhost:8080/api/cagetoires/v1/{id}
 
 
-Maven spring-jdbc  
-
+# Maven spring-jdbc  
+```java
 <dependency>
         <groupId>org.springframework</groupId>
         <artifactId>spring-jdbc</artifactId>
@@ -29,7 +29,9 @@ Maven spring-jdbc
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-dbcp2</artifactId>
     <version>2.1.1</version>
-    
+```
+# Create database    
+```java
 =====initial sql schema.sql======== run it mysql console
 DROP DATABASE IF EXISTS rupp_test;
 CREATE DATABASE rupp_test;
@@ -55,7 +57,10 @@ INSERT INTO category (name) values ('Sports and Fitness');
 INSERT INTO category (name) values ('Health and Beauty');
 
 ==============================================
+```
 
+
+```java
 
 =============web.xml===============
 
@@ -450,4 +455,5 @@ password=${database.password}
     <database.username>root</database.username>
     <database.password>root</database.password>    
   </properties>
-
+  
+```
