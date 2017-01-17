@@ -1,12 +1,20 @@
 # Spring REST-API with Jdbc template :
 
+Start jetty server with maven
+
+mvn jetty:run
+
 # CRUD REST-APIs :
 
-GET http://localhost:8080/api/categories/v1/all
-GET http://localhost:8080/api/cagetoires/v1/{id}
-POST http://localhost:8080/api/cagetoires/v1/{id}
-DELETE http://localhost:8080/api/cagetoires/v1/{id}
-PUT http://localhost:8080/api/cagetoires/v1/{id}
+- GET http://localhost:8080/api/categories/v1/all
+
+- GET http://localhost:8080/api/cagetoires/v1/{id}
+
+- POST http://localhost:8080/api/cagetoires/v1/{id}
+
+- DELETE http://localhost:8080/api/cagetoires/v1/{id}
+
+- PUT http://localhost:8080/api/cagetoires/v1/{id}
 
 
 # Maven spring-jdbc  
