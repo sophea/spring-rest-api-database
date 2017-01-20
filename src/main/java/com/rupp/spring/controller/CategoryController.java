@@ -25,7 +25,6 @@ public class CategoryController {
     private CategoryService service;
     
 
-    
     //@RequestMapping(value = "/v1", method = RequestMethod.GET)
     @GetMapping("/v1/all")
     @ResponseBody

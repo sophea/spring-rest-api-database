@@ -5,6 +5,9 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 
+import javax.sql.DataSource;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -12,13 +15,15 @@ import org.springframework.stereotype.Repository;
 
 import com.rupp.spring.domain.DCategory;
 
-@Repository
+@Repository("categoryDaoImpl")
 public class CategoryDaoImpl implements CategoryDao {
     
     private JdbcTemplate jdbcTemplate;
     
-    public CategoryDaoImpl() {
-        jdbcTemplate = new JdbcTemplate(DBCP2DataSourceUtils.getDataSource());
+    @Autowired
+    public CategoryDaoImpl(DataSource dataSource) {
+        //jdbcTemplate = new JdbcTemplate(DBCP2DataSourceUtils.getDataSource());
+        jdbcTemplate = new JdbcTemplate(dataSource);
     }
     /**
      * Returns list of categories from dummy database.
