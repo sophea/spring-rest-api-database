@@ -1,0 +1,128 @@
+maven dependencies
+=====================
+
+    <!-- Logging -->
+     <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>jcl-over-slf4j</artifactId>
+        <version>1.5.8</version>
+    </dependency>
+    <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-api</artifactId>
+        <version>1.5.8</version>
+    </dependency>
+    <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-log4j12</artifactId>
+        <version>1.5.8</version>
+    </dependency>
+    <dependency>
+        <groupId>log4j</groupId>
+        <artifactId>log4j</artifactId>
+        <version>1.2.14</version>
+    </dependency>
+
+
+
+log4j configuration there are either 2 ways to use. 
+
+1 - use  log4j.properties  it must be named as log4j.properites 
+==================
+log4j.rootCategory=INFO, RFA, File
+
+# Application logging file
+log4j.appender.File=org.apache.log4j.DailyRollingFileAppender
+log4j.appender.File.File=logs/sample.log
+log4j.appender.File.DatePattern='.'yyyy-MM-dd
+log4j.appender.File.MaxBackupIndex=10
+log4j.appender.File.layout=org.apache.log4j.PatternLayout
+log4j.appender.File.layout.ConversionPattern=%4p %d{yyyy-MM-dd HH:mm:ss} %C{2}.%M:%L - %m%n
+
+log4j.appender.RFA=org.apache.log4j.ConsoleAppender
+log4j.appender.RFA.Append=true
+log4j.appender.RFA.layout=org.apache.log4j.PatternLayout
+log4j.appender.RFA.layout.ConversionPattern=%4p %d{yyyy-MM-dd HH:mm:ss} %C{2}.%M:%L - %m%n
+#log4j.appender.RFA.layout.ConversionPattern=%d{HH:mm:ss} %m - %p %l%n
+
+# Extensive logging on our classes
+log4j.additivity.com.rupp=false
+log4j.category.com.rupp=DEBUG, RFA, File
+
+==========
+
+
+2 - log4j.xml , it must be named log4j.xml
+===================
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<!-- ===================================================================== -->
+<!--                                                                       -->
+<!--  Log4j Configuration                                                  -->
+<!--                                                                       -->
+<!-- ===================================================================== -->
+
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/" debug="false">
+
+  <appender class="org.apache.log4j.AsyncAppender" name="ASYNC">
+    <appender-ref ref="FILE"/>
+    <appender-ref ref="CONSOLE"/>
+  </appender>
+
+  <appender class="org.apache.log4j.RollingFileAppender" name="FILE">
+    <param name="File" value="logs/sample.log"/>
+    <param name="MaxBackupIndex" value="10"/>
+    <param name="MaxFileSize" value="10mb"/>
+    <layout class="org.apache.log4j.PatternLayout">
+      <param name="ConversionPattern" value="%d{MM-dd HH:mm:ss,SSS} %-5p [%c{1}] %m%n"/>
+    </layout>
+  </appender>
+
+  <!-- ============================== -->
+  <!-- Append messages to the console -->
+  <!-- ============================== -->
+
+  <appender class="org.apache.log4j.ConsoleAppender" name="CONSOLE">
+    <param name="Threshold" value="ALL"/>
+    <param name="Target" value="System.out"/>
+
+    <layout class="org.apache.log4j.PatternLayout">
+      <!-- The default pattern: Date Priority [Category] Message\n -->
+      <param name="ConversionPattern" value="%d{ABSOLUTE} %-5p [%c{1}] %m%n"/>
+    </layout>
+  </appender>
+
+  <!-- ================ -->
+  <!-- Limit categories -->
+  <!-- ================ -->
+    
+  <category additivity="true" name="com.rupp">
+    <priority value="DEBUG" />
+  </category>
+ 
+  
+  <!-- ======================= -->
+  <!-- Setup the Root category -->
+  <!-- ======================= -->
+
+  <root>
+    <appender-ref ref="ASYNC"/>
+    <level value="INFO" />
+  </root>
+  
+</log4j:configuration>
+==========================
+
+
+How to use it in class :
+
+private static final Logger logger = LoggerFactory.getLogger(CategoryController.class);
+
+
+logger.debug("====get all categories====");
+
+logger.debug("====get category detail with id :[{}] ====", id);
+
+....
+
