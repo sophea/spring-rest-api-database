@@ -51,8 +51,8 @@
   <!-- ======================= -->
 
   <root>
-    <appender-ref ref="ASYNC"/>
     <level value="INFO" />
+    <appender-ref ref="ASYNC"/>
   </root>
   
 </log4j:configuration>
