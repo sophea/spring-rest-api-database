@@ -3,6 +3,7 @@ package com.rupp.spring.dao;
 import java.util.List;
 
 import com.rupp.spring.domain.DCategory;
+import com.rupp.spring.domain.ResponseList;
 
 public interface CategoryDao {
 
@@ -33,4 +34,6 @@ public interface CategoryDao {
     Long delete(Long id);
     
     DCategory update(DCategory dCategory);
+    
+    ResponseList<DCategory> getPage(int pagesize, String cursorkey);
 }

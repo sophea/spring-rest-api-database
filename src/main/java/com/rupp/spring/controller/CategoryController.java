@@ -1,6 +1,10 @@
 package com.rupp.spring.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,9 +19,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.rupp.spring.domain.DCategory;
+import com.rupp.spring.domain.ResponseList;
 import com.rupp.spring.service.CategoryService;
 
 @Controller
@@ -35,6 +42,14 @@ public class CategoryController {
     public List<DCategory> getDCategories() {
         logger.debug("====get all categories====");
         return service.list();
+    }
+    
+    @GetMapping("/v1")
+    @ResponseBody
+    public ResponseList<DCategory> getPage(@RequestParam(value="pagesize", defaultValue="10") int pagesize,
+            @RequestParam(value = "cursorkey", required = false) String cursorkey) {
+        logger.debug("====get page {} , {} ====", pagesize, cursorkey);
+        return service.getPage(pagesize, cursorkey);
     }
 
     //@RequestMapping(value = "/v1/{id}", method = RequestMethod.GET)
@@ -83,4 +98,60 @@ public class CategoryController {
 
         return new ResponseEntity(category, HttpStatus.OK);
     }
+    @PostMapping("/v1/{id}/json")
+    public ResponseEntity updateByJson(@PathVariable Long id, @RequestBody DCategory category) {
+        logger.debug("====update category detail with id :[{}] ====", id);
+        category = service.update(id, category);
+
+        if (null == category) {
+            return new ResponseEntity("No DCategory found for ID " + id, HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity(category, HttpStatus.OK);
+    }
+    @PostMapping("/v1/json")
+    public ResponseEntity createByJson(@RequestBody DCategory category) {
+        logger.debug("====create new category object with json====");
+        service.create(category);
+        return new ResponseEntity(category, HttpStatus.OK);
+    }
+    
+    /**
+     * <pre>
+     * schema api : Content-Type: application/x-www-form-urlencoded 
+     * example json value
+     * 
+     *   {
+     *       primaryKeyName: "id",
+     *       tableName: "Country",
+     *       primaryKeyType: "long",
+     *       columns: {
+     *           comingSoon: "boolean",
+     *           flagImageUrl: "text",
+     *           isoCode: "text",
+     *           name: "text",
+     *           state: "long",
+     *           tcsUrl: "text",
+     *           createdDate: "datetime"
+     *        }
+     *   }
+     *   </pre>
+     * @param request
+     */
+    @RequestMapping(value = "v1/schema", method = { RequestMethod.GET })
+    public ResponseEntity<Map<String, Object>> getschma(HttpServletRequest request) {
+        final Map<String, Object> body = new HashMap<String, Object>();
+        final Map<String,String> columns = new HashMap<>();
+        
+        columns.put("name", "text");
+        columns.put("createdDate", "datetime");
+        
+        body.put("columns", columns);
+        body.put("tableName", "category");
+        body.put("primaryKeyName", "id");
+        body.put("primaryKeyType", "long");
+        
+        return new ResponseEntity<Map<String, Object>>(body, HttpStatus.OK);
+    }
+    
 }

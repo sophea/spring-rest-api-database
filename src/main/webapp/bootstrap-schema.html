@@ -1,0 +1,257 @@
+<!DOCTYPE>
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>Web App</title>
+
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+<!-- <link href="/static/css/bootstrap.3.3.6.min.css" rel="stylesheet" media="screen"> -->
+<link href="/static/css/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
+
+<style type="text/css">
+body{padding: 0 10px;}
+.hide{diaplay: none;}
+.checkbox{margin: 0 0 0 20px;}
+#httpCode{color: #FF0000;}
+.modal-header{border-radius: 6px 6px 0 0;}
+.modal-footer{padding: 10px 15px;}
+#btnLoadMore{margin-bottom:20px;}
+th{padding-right:15px !important;}
+.glyphicon-plus{padding:2px 0 4px 2px;}
+.margin-bottom-5{margin-bottom: -20px;}
+.btnRemoveItem{position: relative;top: -11px;right: 3px;float: right;}
+.header {
+    background-image: url(/static/img/bg.gif); 
+    cursor: pointer; 
+    font-weight: bold; 
+    background-repeat: no-repeat; 
+    background-position: center right; 
+    padding-left: 20px; 
+    border-right: 1px solid #dad9c7; 
+    margin-left: -1px; 
+}
+.headerSortUp {
+    background-image: url(/static/img/asc.gif); 
+    background-color: #3399FF; 
+}
+.headerSortDown {
+    background-image: url(/static/img/desc.gif); 
+    background-color: #3399FF; 
+}
+
+.stick {
+	background-color:#FFFFFF;
+	box-shadow: 0px 2px 5px #d0d0d0;
+    margin-top: 0 !important;
+    position: fixed;
+    top: 0;
+    z-index: 99;
+    padding:0 !important;
+    width:100%;
+}
+</style>
+
+</head>
+
+<body>
+<center>
+<h1>CRUD API</h1>
+<!-- <h6><a href="/admin">Go to backoffice</a></h6> -->
+</center>
+
+<div class="">
+	
+	<!-- <div class="col-xs-12">
+		<button class="btnList btn btn-primary" value="countries">List Countries</button>
+		<button class="btnList btn btn-primary" value="cities">List Cities</button>
+	</div><br/> -->
+	<!-- <div class="col-xs-12">
+		<button class="btnCreate btn btn-success" data-toggle="modal" data-target="#popupModal">Add countries</button>
+	</div> -->
+	<ul class="nav nav-tabs">
+	    <li id="tab-home" class="active"><a data-toggle="tab" href="#home" id="tableName"></a></li>
+	    <li id="tab-create"><a data-toggle="tab" href="#create-entity">Create</a></li>
+	    <li id="tab-update"><a data-toggle="tab" href="#update-entity">Update</a></li>
+	</ul>
+	  
+ <div class="tab-content">
+ 
+ 	  <!-- Tab Home -->
+	  <div id="home" class="tab-pane fade in active">
+	  
+	  <div class="" id="sticky">
+	  	<div class="row" style="margin:0 !important;">
+		  	<div class="col-md-6">
+		  		<h3 style="display:inline-block;">List all</h3>	
+		  	</div>
+		  	<div class="col-md-3">
+		  		<div class="input-group" style="margin-top:12px">
+			      <input type="text" class="form-control" id="searchBox" placeholder="Search id...">
+			      <span class="input-group-btn">
+			        <button class="btn btn-default" type="button" id="btnSearch">
+			        <span class="glyphicon glyphicon-search" style="padding: 3px 0;"></span>
+			        </button>
+			      </span>
+			    </div><!-- /input-group -->	
+		  	</div>
+		  	<div class="col-md-2">
+		  		<select class="form-control" style="margin-top:12px" id="perPage">
+		  			<option value="10">10 rows per page</option>
+		  			<option value="20">20 rows per page</option>
+		  			<option value="30">30 rows per page</option>
+		  			<option value="50">50 rows per page</option>
+		  		</select>	
+		  	</div>
+		  	<div class="col-md-1">
+		  		<button style="float:right; margin-top:12px" class="btn btn-danger" id="btnDelete">
+		  		<span class="glyphicon glyphicon-remove"></span> Delete</button>	
+		  	</div>
+	  	</div>
+	  </div>
+	  
+	  	<div id="sticky-anchor"></div>
+	  	<table class="table table-bordered table-hover tablesorter" id="sortTable">
+			<thead>
+				<tr id="tableHead" class="bg-info">
+					
+				</tr>
+			</thead>
+			<tbody id="tableBody">
+				<!-- list CountrcreateFieldseties list body -->
+			</tbody>
+		</table>
+		<button id="btnLoadMore" onclick="crudLoadMore();">Load More</button>
+	  </div>
+	  
+  <!-- tab create -->
+  <div id="create-entity" class="tab-pane fade">
+	  <div class="container">
+	    <h3>Create</h3>
+	    <form id="createForm">
+	       <fieldset id="createFieldset">
+	
+	       </fieldset>
+	   	</form>
+	   	<button class="btn btn-primary" id="createButton" onclick="crudCreateEntity();" >Create</button>
+	  </div>
+  </div>
+  
+  <!-- Tab Update -->
+  <div id="update-entity" class="tab-pane fade">
+	  <div class="container">
+	    <h3>Update</h3>
+	    <div class="alert alert-info text-center" id="noResult">
+			No data.
+		</div>
+	    <form class="form-horizontal hide" media="screen" id="updateForm">
+	        <fieldset id="updateFieldset">
+	
+	
+	        </fieldset>
+	    </form>
+	    <button class="btn btn-primary hide" id="updateButton" onclick="crudUpdateEntity();" >Update</button>
+	  </div>
+  </div>
+</div>
+</div>
+	  
+	
+</div>
+
+<!-- success Modal -->
+<div id="successModal" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog modal-sm">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header bg-primary">
+        <h4 class="modal-title">Success</h4>
+      </div>
+      <div class="modal-body">
+      	<span id="successText"></span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" id="btnSuccess" data-dismiss="modal">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- warning Modal -->
+<div id="warningModal" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-sm">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header bg-warning">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Warning</h4>
+      </div>
+      <div class="modal-body">
+      	<strong>Error: </strong><strong id="httpCode"></strong><br/>
+      	<span id="responseMessage"></span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- info Modal -->
+<div id="infoModal" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-sm">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header bg-info">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Info</h4>
+      </div>
+      <div class="modal-body">
+      	<span id="infoMessage"></span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- confirm Modal -->
+<div id="confirmModal" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-sm">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header bg-danger">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Delete</h4>
+      </div>
+      <div class="modal-body">
+      	<span>Are you sure you want to delete?</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-danger" id="deleteAPI">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- JQuery 1.9.1  -->
+<script type="text/javascript" src="/static/js/jquery.1.9.1.min.js"></script>
+
+<!-- MomentJS  -->
+<script type="text/javascript" src="/static/js/moment.2.13.0.min.js"></script>
+
+<!-- Bootstrap JS  -->
+<script type="text/javascript" src="/static/js/bootstrap.3.3.6.min.js"></script>
+
+<!-- datetime picker  -->
+<script type="text/javascript" src="/static/js/bootstrap-datetimepicker.min.js" charset="UTF-8"></script>
+
+<!-- table sorter  -->
+<script type="text/javascript" src="/static/js/jquery.tablesorter.js" charset="UTF-8"></script>
+
+<script type="text/javascript" src="/static/mainAPI.js"></script>
+
+</body>
+</html>
