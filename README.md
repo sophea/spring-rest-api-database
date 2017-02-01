@@ -16,6 +16,8 @@ mvn jetty:run
 
 - PUT http://localhost:8080/api/cagetoires/v1/{id}
 
+# Client html page crud action 
+- http://localhost:8080/bootstrap-schema.html
 
 # Maven spring-jdbc  
 ```java
